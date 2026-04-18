@@ -1,0 +1,12 @@
+@base_adress = http://localhost:3000/api/auth
+
+POST {{base_adress}}
+Content-Type: application/json
+
+{
+  "Fname" : "Asanda",
+  "Lname" : "Ngcobo",
+  "Password" : "S7812",
+  "Email" : "Aaa@gmail.com"
+}
+
