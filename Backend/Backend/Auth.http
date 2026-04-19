@@ -1,4 +1,4 @@
-@base_adress = http://localhost:3000/api/auth
+@base_adress = http://localhost:3000/api/auth/Register
 
 POST {{base_adress}}
 Content-Type: application/json
@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "Fname" : "Asanda",
   "Lname" : "Ngcobo",
-  "Password" : "S7812",
-  "Email" : "Aaa@gmail.com"
+  "Password" : "S78hggf12",
+  "Email" : "decoythingpholoba@gmail.com"
 }
 

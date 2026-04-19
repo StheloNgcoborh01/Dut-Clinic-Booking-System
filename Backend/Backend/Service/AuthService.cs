@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using BCrypt.Net;
 
 namespace Backend.Service;
 
@@ -42,6 +42,14 @@ public async Task<bool> CheckEmptyField(string field)
     public async Task<bool> CheckEmailDomain(string email)
     {
         return email.EndsWith("@gmail.com");
+    }
+
+
+   public async Task<string> HashPassword(string Password)
+    {
+        
+        return BCrypt.Net.BCrypt.HashPassword(Password);
+
     }
 
 

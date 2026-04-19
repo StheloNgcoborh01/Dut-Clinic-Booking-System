@@ -1,6 +1,9 @@
 using Backend.models;
 using Microsoft.EntityFrameworkCore;
 using Backend.Service;
+using Backend.Services;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 

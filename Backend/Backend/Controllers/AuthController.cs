@@ -2,10 +2,12 @@ using Backend.models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Backend.Service;
+using BCrypt.Net;
+using Backend.Services;
 
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/Register")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -41,9 +43,27 @@ namespace Backend.Controllers
                 }
 
 
+               var hashedPassword = await _authService.HashPassword(user.Password);
+               user.Password = hashedPassword;
+
+
+               
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return Ok(user);
+
+                // Generate and save code
+              string code = new Random().Next(100000, 999999).ToString();
+               user.VerifyCode = code;
+               user.CodeExpiry = DateTime.UtcNow.AddMinutes(10); 
+               await _context.SaveChangesAsync();
+
+              // Send email
+              var emailService = HttpContext.RequestServices.GetRequiredService<EmailService>();
+            await emailService.SendVerificationEmail(user.Email, code);
+
+
+                return Ok($"{user} ...Registered");
                 
             }
             catch(Exception ex)
