@@ -57,8 +57,11 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+Auth.http
+
+appsettings.json
 appsettings.Development.json
-appsettings.Production.json
+
 
 # Benchmark Results
 BenchmarkDotNet.Artifacts/

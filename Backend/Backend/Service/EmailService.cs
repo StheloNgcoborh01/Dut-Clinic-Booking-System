@@ -1,16 +1,18 @@
+using Backend.Service;
 using MailKit.Net.Smtp;
 using MimeKit;
 
+
 namespace Backend.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly string _fromEmail;
         private readonly string _fromPassword;
 
         public EmailService(IConfiguration configuration)
         {
-            // Get values from config with null checking
+            
             _fromEmail = configuration["EmailSettings:FromEmail"] 
                 ?? throw new InvalidOperationException("EmailSettings:FromEmail is missing in appsettings.json");
             
@@ -42,11 +44,11 @@ namespace Backend.Services
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
 
-                Console.WriteLine($"✅ Email sent to {toEmail}");
+                Console.WriteLine($" Email sent to {toEmail}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Failed to send email: {ex.Message}");
+                Console.WriteLine($" Failed to send email: {ex.Message}");
             }
         }
     }
