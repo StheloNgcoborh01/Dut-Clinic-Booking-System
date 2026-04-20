@@ -14,7 +14,6 @@ public class AuthService : IAuthService
 {
     private readonly AppDbContext _context;
 
-
     public AuthService(AppDbContext context)
     {
         _context = context;
@@ -50,6 +49,11 @@ public async Task<bool> CheckEmptyField(string field)
         
         return BCrypt.Net.BCrypt.HashPassword(Password);
 
+    }
+
+    public async Task<string> GenerateRandom()
+    {
+        return new Random().Next(100000, 999999).ToString();
     }
 
 

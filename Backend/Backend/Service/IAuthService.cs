@@ -12,6 +12,7 @@ public interface IAuthService
     Task<bool> CheckEmailDomain(string Email);
 
     Task<string> HashPassword(string Password);
+    Task<string> GenerateRandom();
     
-
+    // Task<string> GetUserByEmail(string email);
 }
