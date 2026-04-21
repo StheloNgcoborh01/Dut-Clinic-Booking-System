@@ -22,8 +22,11 @@ namespace Backend.Services
 
         public async Task SendVerificationEmail(string toEmail, string code)
         {
+
             try
             {
+              
+              
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("Dut Clinic Booking", _fromEmail));
                 message.To.Add(new MailboxAddress("", toEmail));
@@ -32,7 +35,7 @@ namespace Backend.Services
                 message.Body = new TextPart("html")
                 {
                     Text = $@"
-                        <h2>Welcome to Dut Clinic!</h2>
+                        <h2>Dut Clinic!</h2>
                         <p>Your verification code is: <strong>{code}</strong></p>
                         <p>Enter this code to verify your email address.</p>
                     "

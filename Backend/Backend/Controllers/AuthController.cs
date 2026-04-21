@@ -5,6 +5,7 @@ using Backend.Service;
 using BCrypt.Net;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Backend.Controllers
 {
@@ -15,23 +16,26 @@ namespace Backend.Controllers
         private readonly AppDbContext _context;
         public readonly IAuthService _authService;
 
-        public AuthController(AppDbContext context, IAuthService authService)
+        public readonly EmailService _EmailService;
+
+        public AuthController(AppDbContext context, IAuthService authService, EmailService emailService)
         {
             _context = context;
             _authService = authService;
+            _EmailService = emailService;
         }
 
-      [HttpPost("Register")]
-    public async Task<IActionResult> AddUser(User user)
-    {
-        try
+        [HttpPost("Register")]
+        public async Task<IActionResult> AddUser(User user)
         {
-              if ( await _authService.CheckEmptyField(user.Fname) || await _authService.CheckEmptyField(user.Lname) || await _authService.CheckEmptyField(user.Email) || await _authService.CheckEmptyField(user.Password) )
+            try
+            {
+                if (await _authService.CheckEmptyField(user.Fname) || await _authService.CheckEmptyField(user.Lname) || await _authService.CheckEmptyField(user.Email) || await _authService.CheckEmptyField(user.Password))
                 {
-                return Conflict("Check Empty Fields");
+                    return Conflict("Check Empty Fields");
                 }
-        
-                if ( await _authService.CheckEmailExistsAsync(user.Email))
+
+                if (await _authService.CheckEmailExistsAsync(user.Email))
                 {
                     return Conflict($"email {user.Email} Already exist");
                 }
@@ -41,29 +45,33 @@ namespace Backend.Controllers
                     return Conflict("password is too weak . alteast 8 letters with Capical letter");
                 }
 
-               var hashedPassword = await _authService.HashPassword(user.Password);
-               user.Password = hashedPassword;
-                
-               string code = await _authService.GenerateRandom();
-               user.VerifyCode = code;
-               user.CodeExpiry = DateTime.UtcNow.AddMinutes(10); 
-               
+                var hashedPassword = await _authService.HashPassword(user.Password);
+                user.Password = hashedPassword;
+
+                string code = await _authService.GenerateRandom();
+                user.VerifyCode = code;
+                user.CodeExpiry = DateTime.UtcNow.AddMinutes(10);
+
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-            var emailService = HttpContext.RequestServices.GetRequiredService<EmailService>();
-            await emailService.SendVerificationEmail(user.Email, code);
+
+                await _EmailService.SendVerificationEmail(user.Email, code);
 
                 return Ok($"{user.Email}...Registered");
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); 
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message,
+                    innerMessage = ex.InnerException?.Message
+                });
+
             }
 
         }
-
 
         public class VerifyRequest
         {
@@ -71,52 +79,220 @@ namespace Backend.Controllers
             public string VerifyCode { get; set; } = string.Empty;
         }
 
-   [HttpPost("Verify")]
-   public async Task<IActionResult> VerifyUser([FromBody] VerifyRequest request)
-        {
-            try{
 
-           var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.Email == request.Email);
-           if (UserObject == null)
+        [HttpPost("Verify")]
+        public async Task<IActionResult> VerifyUser([FromBody] VerifyRequest request)
+        {
+            try
+            {
+
+                var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.Email == request.Email);
+                if (UserObject == null)
                 {
                     return NotFound();
                 }
 
-            var DbCode = UserObject.VerifyCode;
-            var UserCode = request.VerifyCode;
+                var DbCode = UserObject.VerifyCode;
+                var UserCode = request.VerifyCode;
 
 
-            if (UserObject.IsVerified)
+                if (UserObject.IsVerified)
                 {
-                 return Conflict("User is already verified");
+                    return Conflict("User is already verified");
                 }
-              var timeNow = DateTime.UtcNow;
+                var timeNow = DateTime.UtcNow;
 
-           if (UserObject.CodeExpiry < timeNow)
+                if (UserObject.CodeExpiry < timeNow)
                 {
                     return BadRequest(new { message = "Verification code has expired. Please request a new code." });
                 }
-            
 
-            if (DbCode != UserCode)
+
+                if (DbCode != UserCode)
                 {
                     return Unauthorized(new { message = "Invalid verification code" });
                 }
 
 
+                UserObject.IsVerified = true;
+                UserObject.CodeExpiry = null;
+                UserObject.VerifyCode = "";
 
-              UserObject.IsVerified = true;
-              UserObject.CodeExpiry = null;
-              UserObject.VerifyCode = "";
-
-            _context.Users.Update(UserObject);
-             await _context.SaveChangesAsync();
-            return Ok("sucess...");
+                _context.Users.Update(UserObject);
+                await _context.SaveChangesAsync();
+                return Ok("sucess...");
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); 
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        public class ForgotRequest
+        {
+            public string Email { get; set; } = string.Empty;
+
+        }
+
+        [HttpPost("Forgot")]
+        public async Task<IActionResult> ForgotUser([FromBody] ForgotRequest request)
+        {
+            try
+            {
+
+                var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.Email == request.Email);
+
+                if (UserObject != null)
+                {
+                    string code = await _authService.GenerateRandom();
+                    UserObject.VerifyCode = code;
+                    UserObject.CodeExpiry = DateTime.UtcNow.AddMinutes(10);
+
+                    await _context.SaveChangesAsync();
+                    await _EmailService.SendVerificationEmail(UserObject.Email, code);
+
+                    return Ok("Code has Been sent to your Email");
+
+                }
+                return Ok("If the email exists, a reset code has been sent.");
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+        [HttpPost("verifyForgot")]
+        public async Task<IActionResult> VerifyForgot([FromBody] VerifyRequest verifyRequest)
+        {
+            try
+            {
+                var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.Email == verifyRequest.Email);
+
+                if (UserObject != null)
+                {
+                    var timeNow = DateTime.UtcNow;
+
+                    if (string.IsNullOrEmpty(UserObject.VerifyCode))
+                    {
+                        return BadRequest(new { message = "No verification code found. Request a new one." });
+                    }
+
+                    var userCode = verifyRequest.VerifyCode;
+                    var DBcode = UserObject.VerifyCode;
+
+                    if (DBcode != userCode)
+                    {
+                        return Unauthorized(new { message = "Invalid verification code" });
+                    }
+
+                    if (UserObject.CodeExpiry < timeNow)
+                    {
+                        return BadRequest(new { message = "Verification code has expired. Please request a new code." });
+                    }
+
+                    UserObject.CodeExpiry = null;
+                    UserObject.VerifyCode = null;
+
+                    if (!UserObject.IsVerified)
+                    {
+                        UserObject.IsVerified = true;
+                    }
+
+                    string resetToken = Guid.NewGuid().ToString();
+
+                    UserObject.ResetToken = resetToken;
+                    UserObject.ResetTokenExpiry = DateTime.UtcNow.AddMinutes(5);
+
+                    await _context.SaveChangesAsync();
+                    return Ok(new
+                    {
+                        message = "Code verified successfully. You can now reset your password.",
+                        resetToken = resetToken,
+                        expiresInMinutes = 10
+                    });
+                }
+
+                return NotFound(new { message = "Email not found. Please check and try again." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
+
+
+
+
+        }
+
+
+        public class ResetPassword
+        {
+            public string ResetToken { get; set; } = string.Empty;
+
+            public string Password { get; set; } = string.Empty;
+
+        }
+
+        [HttpPost("passwordReset")]
+        public async Task<IActionResult> PasswordReset([FromBody] ResetPassword resetPassword)
+        {
+            try
+            {
+                var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.ResetToken == resetPassword.ResetToken);
+                if (UserObject != null)
+
+                {
+                    var timeNow = DateTime.UtcNow;
+
+                    if (string.IsNullOrEmpty(UserObject.ResetToken))
+                    {
+                        return BadRequest(new { message = "No reset token found. Please request a password reset first." });
+                    }
+
+                    if (UserObject.ResetTokenExpiry == null || UserObject.ResetTokenExpiry < timeNow)
+                    {
+                        return BadRequest(new { message = "Reset Token code has expired. Please try again." });
+                    }
+
+                    var userPassword = resetPassword.Password;
+
+
+                    if (!await _authService.CheckPasswordStrength(userPassword))
+                    {
+                        return Conflict("password is too weak . alteast 8 letters with Capical letter");
+                    }
+
+                    var hashedPassword = await _authService.HashPassword(userPassword);
+                    UserObject.Password = hashedPassword;
+                    UserObject.ResetToken = null;
+                    UserObject.ResetTokenExpiry = null;
+
+                    return Ok("Your have successfull reseted your passsword");
+
+                }
+
+                return NotFound("User Not Found");
+
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message,
+                    innerMessage = ex.InnerException?.Message
+                });
+            }
+
+        }
+
     }
+
 }

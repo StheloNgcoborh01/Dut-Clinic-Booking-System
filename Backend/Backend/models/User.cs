@@ -21,7 +21,10 @@ public class User
 
     public bool IsVerified { get; set; } = false;
 
-    public string VerifyCode { get; set; } = string.Empty;
+    public string? VerifyCode { get; set; }
     public DateTime? CodeExpiry { get; set; }
+     public string? ResetToken { get; set; }
+
+     public DateTime? ResetTokenExpiry { get; set; }
 
 }
