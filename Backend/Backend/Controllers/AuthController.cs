@@ -6,6 +6,8 @@ using BCrypt.Net;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Backend.Controllers
 {
@@ -17,12 +19,14 @@ namespace Backend.Controllers
         public readonly IAuthService _authService;
 
         public readonly EmailService _EmailService;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(AppDbContext context, IAuthService authService, EmailService emailService)
+        public AuthController(AppDbContext context, IAuthService authService, EmailService emailService, ITokenService tokenService)
         {
             _context = context;
             _authService = authService;
             _EmailService = emailService;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Register")]
@@ -198,6 +202,7 @@ namespace Backend.Controllers
 
                     UserObject.CodeExpiry = null;
                     UserObject.VerifyCode = null;
+                    UserObject.ResetToken = null;
 
                     if (!UserObject.IsVerified)
                     {
@@ -225,9 +230,6 @@ namespace Backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 
             }
-
-
-
 
         }
 
@@ -263,7 +265,6 @@ namespace Backend.Controllers
 
                     var userPassword = resetPassword.Password;
 
-
                     if (!await _authService.CheckPasswordStrength(userPassword))
                     {
                         return Conflict("password is too weak . alteast 8 letters with Capical letter");
@@ -273,6 +274,7 @@ namespace Backend.Controllers
                     UserObject.Password = hashedPassword;
                     UserObject.ResetToken = null;
                     UserObject.ResetTokenExpiry = null;
+                     await _context.SaveChangesAsync();
 
                     return Ok("Your have successfull reseted your passsword");
 
@@ -293,6 +295,74 @@ namespace Backend.Controllers
 
         }
 
+        public class Login
+        {
+            public string? Email { get; set; }
+
+            public string? Password { get; set; }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> login([FromBody] Login login)
+        {
+
+            try
+            {
+                var UserObject = await _context.Users.FirstOrDefaultAsync<User>(u => u.Email == login.Email);
+
+                if (UserObject == null || UserObject.IsVerified != true || !BCrypt.Net.BCrypt.Verify(login.Password, UserObject.Password))
+                {
+                     return Unauthorized(new { message = "Invalid email or password, or account not verified" });
+                }
+                   var token = _tokenService.CreateToken(UserObject);
+                    return Ok(new
+                    {
+                        message = "You have logged in",
+                         token = token,
+                         expiresInMinutes = 60, 
+                        
+                    });
+                }
+            
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = ex.Message,
+                    innerMessage = ex.InnerException?.Message,
+                   
+                });
+            }
+
+
+        }
+
+
+[Authorize]
+[HttpGet("me")]
+public async Task<IActionResult> GetCurrentUser()
+{
+    // Get user ID from the token
+    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    
+    var user = await _context.Users.FindAsync(userId);
+    
+    if (user == null)
+        return NotFound();
+
+    return Ok(new
+    {
+        id = user.Id,
+        email = user.Email,
+        name = $"{user.Fname} {user.Lname}",
+        isVerified = user.IsVerified
+    });
+}
+
+
+
     }
+
+
 
 }
