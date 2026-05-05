@@ -343,7 +343,7 @@ namespace Backend.Controllers
 public async Task<IActionResult> GetCurrentUser()
 {
     // Get user ID from the token
-    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
     
     var user = await _context.Users.FindAsync(userId);
     

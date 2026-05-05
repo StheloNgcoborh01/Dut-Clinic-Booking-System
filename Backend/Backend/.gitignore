@@ -6,6 +6,10 @@
 # dotenv files
 .env
 
+Notes.txt
+Booking.http
+
+
 # User-specific files
 *.rsuser
 *.suo
