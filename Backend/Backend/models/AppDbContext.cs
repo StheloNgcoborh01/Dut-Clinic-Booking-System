@@ -11,6 +11,6 @@ public class AppDbContext : DbContext
  }
 
  public DbSet<User> Users { get; set; }
- public DbSet<Bookings> Bookings { get; set; }
+ public DbSet<Booking> Bookings { get; set; }
     
 }

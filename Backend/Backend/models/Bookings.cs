@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.models;
 
-public class Bookings
+public class Booking
 {
     // Primary Key
     public int Id { get; set; }
@@ -16,10 +16,10 @@ public class Bookings
     public string Reference { get; set; } = string.Empty;
 
     // Patient Info (copied from User at booking time)
-    [Required]
+  
     public string Name { get; set; } = string.Empty;
 
-    [Required]
+    
     public string Surname { get; set; } = string.Empty;
 
     // South African ID Number (stored as string because it's 13 digits and never used for math)
