@@ -13,6 +13,7 @@ public interface IAuthService
 
     Task<string> HashPassword(string Password);
     Task<string> GenerateRandom();
+    Task<bool> CheckExistingIdAsync(string Idnumber);
     
     // Task<string> GetUserByEmail(string email);
 }

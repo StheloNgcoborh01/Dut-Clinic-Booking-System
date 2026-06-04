@@ -31,7 +31,7 @@ namespace Backend.Controllers
             _tokenService = tokenService;
         }
 
-
+    [Authorize]
     [HttpPost("AddBooking")]
 public async Task<IActionResult> AddingBooking([FromBody] Booking request)
 {
@@ -43,8 +43,8 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         var fullNameClaim = User.FindFirst("FullName");
 
         // Convert to UTC immediately for the db
-        var appointmentDateUtc = request.AppointmentDate.ToUniversalTime();
-
+var appointmentDateUtc = DateTime.SpecifyKind(request.AppointmentDate, DateTimeKind.Utc);
+       
         if (userIdClaim == null || emailClaim == null || fullNameClaim == null)
         {
             return Unauthorized(new { message = "Invalid token. Please login again." });
@@ -59,6 +59,12 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         var firstName = nameParts[0];
         var lastName = nameParts.Length > 1 ? nameParts[1] : "";
 
+       var today = DateTime.UtcNow.Date;
+       var startDate = today.AddDays(1);
+       var endDate = today.AddDays(30);
+
+    // var isExist  =  await _context.Bookings.AnyAsync(user => user.IdNumber == request.IdNumber);
+
         // 2. VALIDATE REQUIRED FIELDS
         if (string.IsNullOrWhiteSpace(request.IdNumber))
         {
@@ -70,6 +76,11 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
             return BadRequest(new { message = "ID Number must be 13 digits" });
         }
 
+         if (await _authService.CheckExistingIdAsync( request.IdNumber))
+         {
+            return BadRequest(new { message = "Id Number is Linked to Anouther Account" });
+         }
+
         if (appointmentDateUtc == default(DateTime))
         {
             return BadRequest(new { message = "Appointment date is required" });
@@ -78,6 +89,14 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         if (appointmentDateUtc < DateTime.UtcNow.Date)
         {
             return BadRequest(new { message = "Appointment date cannot be in the past" });
+        }
+
+        if(appointmentDateUtc < startDate || appointmentDateUtc > endDate)
+         {
+         return BadRequest(new
+             {
+              message = "Bookings are for the next 30 days only"
+            });
         }
 
         if (string.IsNullOrWhiteSpace(request.AppointmentType))
@@ -124,7 +143,6 @@ var existingBooking = await _context.Bookings
         booking.Reference = $"BK-{booking.Id:D4}";
         await _context.SaveChangesAsync();
 
-Console.WriteLine($"DEBUG: Email params - To: {userEmail}, Name: {firstName}, Ref: {booking.Reference}, Date: {booking.AppointmentDate}, Time: {booking.AppointmentTime}, Type: {booking.AppointmentType}");
         // 6. SEND CONFIRMATION EMAIL (DON'T FAIL IF EMAIL FAILS)
         try
         {
@@ -133,8 +151,8 @@ Console.WriteLine($"DEBUG: Email params - To: {userEmail}, Name: {firstName}, Re
                 <p>Dear {firstName} {lastName},</p>
                 <p>Your appointment has been confirmed.</p>
                 <p><strong>Reference:</strong> {booking.Reference}</p>
-                <p><strong>Date:</strong> {booking.AppointmentDate:yyyy-MM-dd}</p>
-                <p><strong>Time:</strong> {booking.AppointmentTime.Hours:D2}:{booking.AppointmentTime.Minutes:D2}</p>              
+                <p><strong>Date:</strong>📅  {booking.AppointmentDate:yyyy-MM-dd}</p>
+                <p><strong>Time:</strong>⏰ {booking.AppointmentTime.Hours:D2}:{booking.AppointmentTime.Minutes:D2}</p>              
                 <p><strong>Type:</strong> {booking.AppointmentType}</p>
                 <p>Please bring your ID to the appointment.</p>
             ";
@@ -169,6 +187,175 @@ Console.WriteLine($"DEBUG: Email params - To: {userEmail}, Name: {firstName}, Re
     }
 }
 
+[Authorize]
+[HttpGet("MyBookings")]
+
+public async Task<IActionResult> GetAllBookings()
+        {
+            try
+            {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+             var bookings = await _context.Bookings
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.AppointmentDate) // newest first
+            .ToListAsync();
+
+                return Ok( new
+                {
+                    bookings = bookings
+                }
+
+                );
+            }
+
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            message = "An error occurred while creating your booking",
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
     }
 
+        }
+
+    [Authorize]
+    [HttpGet("MyPastBookings")]
+
+public async Task<IActionResult> GetAPastBookings()
+        {
+            try
+            {
+                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+          
+           var today = DateTime.UtcNow.Date;
+             var bookings = await _context.Bookings
+            .Where(b => b.UserId == userId && b.AppointmentDate < today && b.Status == "Past")
+            .OrderByDescending(b => b.AppointmentDate)  // newest first
+            .ToListAsync();
+
+
+                return Ok( new
+                {
+                    bookings = bookings
+                }
+
+                );
+            }
+
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            message = "An error occurred while creating your booking",
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+
+        }
+
+    [Authorize]
+    [HttpGet("FutureBookings")]
+
+public async Task<IActionResult> GetFutureBookings()
+        {
+            try
+            {
+                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+          
+           var today = DateTime.UtcNow.Date;
+             var bookings = await _context.Bookings
+            .Where(b => b.UserId == userId && b.AppointmentDate >= today && b.Status == "Upcoming")
+            .OrderByDescending(b => b.AppointmentDate)  // newest first
+            .ToListAsync();
+
+
+                return Ok( new
+                {
+                    bookings = bookings
+                }
+
+                );
+            }
+
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            message = "An error occurred while creating your booking",
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+
+        }
+
+    [Authorize]
+    [HttpDelete("cancel/{id}")]
+      public async Task<IActionResult> DeleteBooking(int id)
+        {
+
+            try
+         {
+          var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+          var booking = await _context.Bookings.
+          FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+         
+          //check null
+
+          if(booking == null)
+                {
+                    return NotFound( new
+                    {
+                        message = "Booking not Found"
+                    });
+                }
+          //check booking date
+          if (booking.AppointmentDate < DateTime.UtcNow.Date)
+                {
+                    return BadRequest( new
+                    {
+                        message = "This Booking is Already Past"
+                    });
+                }
+          //status
+          if (booking.Status != "Upcoming")
+                {
+                    return BadRequest(new
+                    {
+                        message = "the you can cancell only upcoming bookings"
+                    });
+                }
+
+         //then make the staus == cancelled
+         booking.Status = "Cancelled";
+         await _context.SaveChangesAsync();
+
+         return Ok(new
+         {
+             message = "booking Cancelled successfully"
+         });
+
+                
+            }
+        catch (Exception ex)
+        {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            message = "An error occurred while creating your booking",
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+        }
+            
+        }
+
+
+    }
 }

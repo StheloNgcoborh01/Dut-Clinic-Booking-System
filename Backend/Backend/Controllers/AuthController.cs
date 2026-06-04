@@ -168,9 +168,6 @@ namespace Backend.Controllers
 
         }
 
-
-
-
         [HttpPost("verifyForgot")]
         public async Task<IActionResult> VerifyForgot([FromBody] VerifyRequest verifyRequest)
         {
@@ -362,7 +359,5 @@ public async Task<IActionResult> GetCurrentUser()
 
 
     }
-
-
 
 }

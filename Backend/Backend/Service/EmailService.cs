@@ -22,12 +22,10 @@ namespace Backend.Services
 
         public async Task SendVerificationEmail(string toEmail, string code)
 
-
         {
 
             try
             {
-              
               
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("Ntuzuma Clinic Booking", _fromEmail));

@@ -26,6 +26,11 @@ public class AuthService : IAuthService
 
     }
 
+    public async Task<bool> CheckExistingIdAsync(string Idnumber)
+    {
+        return await _context.Bookings.AnyAsync(b => b.IdNumber == Idnumber );
+    }
+
 
     public async Task<bool> CheckPasswordStrength(string password)
     {
