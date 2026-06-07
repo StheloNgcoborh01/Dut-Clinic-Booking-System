@@ -316,6 +316,280 @@ public async Task<IActionResult> GetByReference(string reference)
 
             
 }
+   
+   
+   //search by reference
+[Authorize]
+[HttpGet("admincancel/{id}")]
+
+public async Task<IActionResult >CancelAppointment(int id)
+        {
+
+            try
+            {
+
+             if (!await IsAdmin())
+                {  
+                     return Unauthorized(new
+                     {
+                         message = "unable to acess"
+                     });
+                }
+             var booking = await _context.Bookings
+                           .FindAsync(id);
+
+            if(booking == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "booking not found"
+                    });
+                }
+            if(booking.AppointmentDate < DateTime.UtcNow.Date)
+                {
+                    return BadRequest(new
+                    {
+                        message = "you cannot cancell a past booking"
+                    });
+                }
+            if(booking.Status != "Upcoming")
+                {
+                    return BadRequest(new
+                    {
+                        message = "the booking status can no longer be changed"
+                    });
+                }
+            
+            booking.Status = "Cancelled";
+            await _context.SaveChangesAsync();
+
+              return Ok(new
+              {
+                  message = "booking cancelled"
+              });
+                
+            }
+
+                catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
     }
 
+            
+}
+   
+   
+   
+   
+
+   //get all bokings for a specific patient..
+
+
+   
+
+    [Authorize]
+     [HttpGet("AllBookingFor/{userid}")]
+
+public async Task<IActionResult> AllBookingFor(int userid)
+        {
+
+            try
+            {
+
+             if (!await IsAdmin())
+                {  
+                     return Unauthorized(new
+                     {
+                         message = "unable to acess"
+                     });
+                }
+
+             var allBookings = await _context.Bookings
+                               .Where(b => b.UserId == userid)
+                               .OrderByDescending(b => b.AppointmentDate)
+                               .ToListAsync();
+            
+
+            if(allBookings == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "bookings not found"
+                    });
+                }
+
+            return Ok(new
+            {
+                message = $"bookings for {userid}",
+                allBookings  = allBookings
+            });
+          
+            }
+         
+ 
+                
+            
+
+                catch (Exception ex)
+          {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+         {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+         });
+    }
+   
+    }
+
+
+
+  public class Reschedule
+        {
+           public DateTime  newdate { get; set; }
+
+           public TimeSpan newTime { get; set; } 
+        }
+
+
+    [Authorize]
+    [HttpPatch("reschedule/{id}")]
+
+public async Task<IActionResult> AdminReschedule([FromBody] Reschedule reschedule,int id)
+        {
+
+            try
+            {
+
+                if(!await IsAdmin())
+                {  
+                     return Unauthorized(new
+                     {
+                         message = "unable to acess"
+                     });
+                }
+            
+            var booking = await _context.Bookings
+                                .FirstOrDefaultAsync(b => b.Id == id);
+
+             
+             var appointmentDateUtc = DateTime.SpecifyKind(reschedule.newdate, DateTimeKind.Utc);
+             var today = DateTime.UtcNow.Date;
+             var startdate = today.AddDays(1);
+
+             var endDate = today.AddDays(30);
+
+
+                if (booking == null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "booking is not found"
+                    });
+
+                }
+
+                if(booking.AppointmentDate < DateTime.UtcNow.Date)
+                {
+                    return BadRequest(new
+                    {
+                        message = "booking is in the past"
+                    });
+                }
+                if(booking.Status != "Upcoming")
+                {
+                    return BadRequest (new
+                    {
+                        message = "cannot change the booking"
+                    });
+                }
+
+                 if(appointmentDateUtc < startdate || appointmentDateUtc > endDate)
+                {
+                    return Conflict(new
+                    {
+                        message = " you can only book for the next 30 days"
+                    });
+                }
+
+      var existingBooking = await _context.Bookings
+    .Where(b => b.AppointmentDate.Date == appointmentDateUtc
+                && b.AppointmentTime == reschedule.newTime
+                && b.Status == "Upcoming")
+    .FirstOrDefaultAsync();
+
+                if (existingBooking != null)
+                {
+                    return Conflict(new
+                    {
+                        message ="seesion is already taken..choose anouther date or time"
+                    });
+                }
+        if (appointmentDateUtc == default(DateTime))
+        {
+            return BadRequest(new { message = "Appointment date is required" });
+        }
+
+              
+
+              booking.AppointmentDate = appointmentDateUtc;
+              booking.AppointmentTime = reschedule.newTime;
+
+              await _context.SaveChangesAsync();
+
+              var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == booking.UserId);
+              
+               
+        // 6. SEND CONFIRMATION EMAIL 
+        
+        try
+        {
+            var emailBody = $@"
+                <h2>Booking Confirmed!</h2>
+                <p>Dear {booking.Name},</p>
+                <p>Your appointment has been rescheduled.</p>
+                <p><strong>Reference:</strong> {booking.Reference}</p>
+                <p><strong>Date:</strong>📅  {booking.AppointmentDate:yyyy-MM-dd}</p>
+                <p><strong>Time:</strong>⏰ {booking.AppointmentTime.Hours:D2}:{booking.AppointmentTime.Minutes:D2}</p>              
+                <p><strong>Type:</strong> {booking.AppointmentType}</p>
+                <p>Please bring your ID to the appointment.</p>
+                <p> Also please Note that you cannot reschedule you booking again </p>
+            ";
+
+          await _EmailService.SendBookingConfirmation(user.Email, booking.Name , booking.Reference, booking.AppointmentDate, booking.AppointmentTime, booking.AppointmentType);
+        
+    
+        }
+        catch (Exception ex)
+        {
+            
+            Console.WriteLine($"Email failed to send: {ex.Message}");
+        }
+
+                return Ok(new
+        {
+             message = "Booking reschedulled successfully",
+             reference = booking.Reference,
+            appointmentDate = booking.AppointmentDate.ToString("yyyy-MM-dd"),
+            appointmentTime = $"{booking.AppointmentTime.Hours:D2}:{booking.AppointmentTime.Minutes:D2}",
+            appointmentType = booking.AppointmentType
+        });
+
+            }
+            
+                catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+
+        }
+
+}
 }

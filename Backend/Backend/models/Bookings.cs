@@ -43,6 +43,7 @@ public class Booking
 
     // System fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
 
 }
 

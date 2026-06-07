@@ -43,7 +43,7 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         var fullNameClaim = User.FindFirst("FullName");
 
         // Convert to UTC immediately for the db
-var appointmentDateUtc = DateTime.SpecifyKind(request.AppointmentDate, DateTimeKind.Utc);
+       var appointmentDateUtc = DateTime.SpecifyKind(request.AppointmentDate, DateTimeKind.Utc);
        
         if (userIdClaim == null || emailClaim == null || fullNameClaim == null)
         {
@@ -106,7 +106,7 @@ var appointmentDateUtc = DateTime.SpecifyKind(request.AppointmentDate, DateTimeK
 
 // Check if this slot is already booked
 var existingBooking = await _context.Bookings
-    .Where(b => b.AppointmentDate.Date == appointmentDateUtc.Date  // ← Added .Date here
+    .Where(b => b.AppointmentDate.Date == appointmentDateUtc.Date  
                 && b.AppointmentTime == request.AppointmentTime
                 && b.Status == "Upcoming")
     .FirstOrDefaultAsync();
@@ -201,6 +201,14 @@ public async Task<IActionResult> GetAllBookings()
             .OrderByDescending(b => b.AppointmentDate) // newest first
             .ToListAsync();
 
+             if(bookings == null)
+                {
+                return NotFound(new
+                {
+                    message = "bookings not found"
+                });
+                }
+
                 return Ok( new
                 {
                     bookings = bookings
@@ -213,7 +221,7 @@ public async Task<IActionResult> GetAllBookings()
     {
         return StatusCode(StatusCodes.Status500InternalServerError, new
         {
-            message = "An error occurred while creating your booking",
+            message = "An error occurred while getting your booking",
             error = ex.Message,
             innerError = ex.InnerException?.Message
         });
@@ -250,7 +258,7 @@ public async Task<IActionResult> GetAPastBookings()
     {
         return StatusCode(StatusCodes.Status500InternalServerError, new
         {
-            message = "An error occurred while creating your booking",
+            message = "An error occurred while getting your booking",
             error = ex.Message,
             innerError = ex.InnerException?.Message
         });
@@ -287,7 +295,7 @@ public async Task<IActionResult> GetFutureBookings()
     {
         return StatusCode(StatusCodes.Status500InternalServerError, new
         {
-            message = "An error occurred while creating your booking",
+            message = "An error occurred while getting your booking",
             error = ex.Message,
             innerError = ex.InnerException?.Message
         });
@@ -348,12 +356,53 @@ public async Task<IActionResult> GetFutureBookings()
         {
         return StatusCode(StatusCodes.Status500InternalServerError, new
         {
-            message = "An error occurred while creating your booking",
+            message = "An error occurred while deleting your booking",
             error = ex.Message,
             innerError = ex.InnerException?.Message
         });
         }
             
+        }
+
+
+[Authorize]
+[HttpGet("getspeficbooking/{id}")]
+
+public async Task<IActionResult> GetSpeficibooking(int id)
+        {
+            try
+            {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+              var booking = await _context.Bookings.
+              FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+                 
+                 if(booking == null)
+                {
+                return NotFound(new
+                {
+                    message = "booking not found"
+                });
+                }
+
+                return Ok( new
+                {
+                    booking = booking
+                }
+
+                );
+            }
+
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            message = "An error occurred while getting your booking",
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+
         }
 
 
