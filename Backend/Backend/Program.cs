@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using dotenv.net;
+using AspNetCoreRateLimit;
+using System.Net;
 
 
 DotEnv.Load();
@@ -51,14 +53,83 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Rate Limiting Configuration
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(options =>
+{
+   options.GeneralRules = new List<RateLimitRule>
+    {
+        // Login: 5 attempts per minute
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/login",
+            Period = "1m",
+            Limit = 5
+        },
+        
+        // Register: 3 attempts per hour
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/Register",
+            Period = "1h",
+            Limit = 3
+        },
+        
+        // Forgot password: 3 attempts per hour
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/Forgot",
+            Period = "30m",
+            Limit = 3
+        },
+        
+        // Bookings: 10 per minute
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Bookings",
+            Period = "1m",
+            Limit = 10
+        },
+        
+        // Available dates: 30 per minute (users browse)
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Bookings/available-dates",
+            Period = "1m",
+            Limit = 30
+        },
+        
+        // Contact: 3 per hour (prevent spam)
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Contact/SendMessage",
+            Period = "1h",
+            Limit = 3
+        },
+        
+        // Default for everything else: 100 per minute
+        new RateLimitRule
+        {
+            Endpoint = "*",
+            Period = "1m",
+            Limit = 100
+        }
+    };
+});
+
+
+builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddInMemoryRateLimiting();
+
 
 var app = builder.Build();
 
 //middleswares
+app.UseIpRateLimiting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();  
+app.MapControllers();
 
 app.Run();
-  
