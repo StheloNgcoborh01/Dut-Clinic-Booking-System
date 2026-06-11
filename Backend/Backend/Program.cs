@@ -9,9 +9,7 @@ using dotenv.net;
 using AspNetCoreRateLimit;
 using System.Net;
 
-
 DotEnv.Load();
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,27 +53,47 @@ builder.Services.AddAuthentication(options =>
 
 // Rate Limiting Configuration
 builder.Services.AddMemoryCache();
+
 builder.Services.Configure<IpRateLimitOptions>(options =>
 {
    options.GeneralRules = new List<RateLimitRule>
     {
-        // Login: 5 attempts per minute
-        new RateLimitRule
-        {
-            Endpoint = "POST:/api/Auth/login",
-            Period = "1m",
-            Limit = 5
-        },
-        
-        // Register: 3 attempts per hour
-        new RateLimitRule
+            new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Register",
             Period = "1h",
             Limit = 3
         },
+
+           new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/Verify",
+            Period = "1h",
+            Limit = 3
+        },
+
         
-        // Forgot password: 3 attempts per hour
+           new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/Forgot",
+            Period = "1h",
+            Limit = 2
+        },
+
+          new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/verifyForgot",
+            Period = "1h",
+            Limit = 5
+        },
+        
+        new RateLimitRule
+        {
+            Endpoint = "POST:/api/Auth/login",
+            Period = "1m",
+            Limit = 3
+        },
+       
         new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Forgot",
@@ -83,7 +101,7 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
             Limit = 3
         },
         
-        // Bookings: 10 per minute
+       
         new RateLimitRule
         {
             Endpoint = "POST:/api/Bookings",
@@ -91,7 +109,6 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
             Limit = 10
         },
         
-        // Available dates: 30 per minute (users browse)
         new RateLimitRule
         {
             Endpoint = "GET:/api/Bookings/available-dates",
@@ -99,7 +116,7 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
             Limit = 30
         },
         
-        // Contact: 3 per hour (prevent spam)
+        
         new RateLimitRule
         {
             Endpoint = "POST:/api/Contact/SendMessage",
@@ -107,12 +124,12 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
             Limit = 3
         },
         
-        // Default for everything else: 100 per minute
+       
         new RateLimitRule
         {
             Endpoint = "*",
             Period = "1m",
-            Limit = 100
+            Limit = 10
         }
     };
 });

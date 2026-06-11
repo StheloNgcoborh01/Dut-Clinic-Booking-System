@@ -31,7 +31,6 @@ public class AuthService : IAuthService
         return await _context.Bookings.AnyAsync(b => b.IdNumber == Idnumber );
     }
 
-
     public async Task<bool> CheckPasswordStrength(string password)
     {
     return Regex.IsMatch(password, @"[a-z]") && Regex.IsMatch(password, @"[A-Z]") && password.Length >= 8;
@@ -48,7 +47,6 @@ public async Task<bool> CheckEmptyField(string field)
         return email.EndsWith("@gmail.com");
     }
 
-
    public async Task<string> HashPassword(string Password)
     {
         
@@ -61,7 +59,6 @@ public async Task<bool> CheckEmptyField(string field)
         return new Random().Next(100000, 999999).ToString();
     }
     
-
 
 }
 

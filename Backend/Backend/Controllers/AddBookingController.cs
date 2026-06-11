@@ -65,6 +65,21 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
 
     // var isExist  =  await _context.Bookings.AnyAsync(user => user.IdNumber == request.IdNumber);
 
+       var CheckBookings = await _context.Bookings
+                           .Where(b => b.UserId == userId && b.Status == "Upcoming")
+                           .ToListAsync();
+       var finduser = await _context.Bookings
+                      .FirstOrDefaultAsync(u => u.UserId == userId);
+
+                           
+          if(CheckBookings.Count >= 2 )
+                {
+                     return BadRequest(new
+                     {
+                         message = "You cannot make more than two bookings in a month"
+                     });
+
+                }
         // 2. VALIDATE REQUIRED FIELDS
         if (string.IsNullOrWhiteSpace(request.IdNumber))
         {
@@ -75,11 +90,15 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         {
             return BadRequest(new { message = "ID Number must be 13 digits" });
         }
-
-         if (await _authService.CheckExistingIdAsync( request.IdNumber))
+        
+        if(finduser.IdNumber != request.IdNumber)
          {
-            return BadRequest(new { message = "Id Number is Linked to Anouther Account" });
-         }
+                    return Conflict(new
+                    {
+                        message = "id number is not valid. use the one u used the first time"
+                    });
+           }
+           
 
         if (appointmentDateUtc == default(DateTime))
         {

@@ -382,14 +382,6 @@ public async Task<IActionResult >CancelAppointment(int id)
             
 }
    
-   
-   
-   
-
-   //get all bokings for a specific patient..
-
-
-   
 
     [Authorize]
      [HttpGet("AllBookingFor/{userid}")]
@@ -591,6 +583,117 @@ public async Task<IActionResult> AdminReschedule([FromBody] Reschedule reschedul
 
         }
 
+
+
+//see all admins
+
+    [Authorize]
+    [HttpGet("allAdmins")]
+     public async Task<IActionResult> AllAdmins()
+        {
+            
+            try
+            {
+
+               if (!await IsAdmin())
+                {
+                    
+                     return Unauthorized(new
+                     {
+                         message = "unalble to acess"
+                     });
+                }
+                
+                var AllAdmins = await _context.Users
+                             .Select(u => new
+                              {
+                              u.Id,
+                              u.Email,
+                              u.Fname,
+                              u.Lname,
+                              u.IsVerified,
+                              u.IsAdmin
+                             }).
+                             Where(u => u.IsAdmin == true)
+                             .ToListAsync();            
+                             
+                return Ok( new
+                {
+                    message = "All Admins",
+                    admins = AllAdmins.Count,
+                    AllAdmins = AllAdmins
+                });
+            }
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+            
+        }
+
+
+public class Toggleadmin
+        {
+            public string Password {get; set;} = string.Empty;
+
+        }
+
+[Authorize]
+[HttpPatch("toggleadmin/{id}")]
+
+public async Task<IActionResult> ToggleAdmin([FromBody] Toggleadmin adminInfo  , int id)
+        {
+            try
+            {
+                    if(!await IsAdmin())
+                {  
+                     return Unauthorized(new
+                     {
+                         message = "unable to acess"
+                     });
+                }
+
+         var  GetAdmin = await _context.Users.FindAsync(id);
+    
+         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
+
+        var CurrentAdmin = await _context.Users.FindAsync(userId);
+
+        if(!BCrypt.Net.BCrypt.Verify(adminInfo.Password, CurrentAdmin.Password))
+                {
+                    return Unauthorized(new
+                    {
+                        message = "Only Admins Can Configure this request"
+                    });
+                }
+                                
+
+          var isAdmin = GetAdmin.IsAdmin ? false : true;
+
+          GetAdmin.IsAdmin = isAdmin;
+          await _context.SaveChangesAsync();
+
+          return Ok(new
+          {
+              message = isAdmin ? $"{GetAdmin.Fname} is now an Admin" : $"{GetAdmin.Fname} is removed as an Admin"
+          });
+                
+            }
+
+         catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+
+        }
 }
 }
 

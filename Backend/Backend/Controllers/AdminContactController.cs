@@ -298,8 +298,6 @@ namespace Backend.Controllers
                         message = "message not found"
                     });
                 }
-                
-
 
               var markMessage = Message.IsRead ? false : true;
               Message.IsRead = markMessage;
