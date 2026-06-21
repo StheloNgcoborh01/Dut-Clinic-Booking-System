@@ -44,7 +44,9 @@ public async Task<bool> CheckEmptyField(string field)
 
     public async Task<bool> CheckEmailDomain(string email)
     {
+        
         return email.EndsWith("@gmail.com");
+    
     }
 
    public async Task<string> HashPassword(string Password)
@@ -53,6 +55,7 @@ public async Task<bool> CheckEmptyField(string field)
         return BCrypt.Net.BCrypt.HashPassword(Password);
 
     }
+
 
     public async Task<string> GenerateRandom()
     {

@@ -139,8 +139,22 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddInMemoryRateLimiting();
 
+// Add this before builder.Build()
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
+
+
+app.UseCors("AllowReactApp");
 
 //middleswares
 app.UseIpRateLimiting();
@@ -150,3 +164,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+public partial class Program { }

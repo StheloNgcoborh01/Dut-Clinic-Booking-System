@@ -1,0 +1,262 @@
+ * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .auth-box{
+
+      background: rgb(255, 255, 255);
+      max-width: 280px;
+      width: 100%;
+      padding: 1rem 1.8rem;
+
+     position: absolute;
+     top:50%;
+     left:50%;
+     transform: translate(-50%, -50%);
+        
+  
+    }
+
+    .login-box {
+      background: rgb(255, 255, 255);
+      max-width: 400px;
+      width: 150%;
+      padding: 2rem 1.8rem;
+
+     position: absolute;
+     top:50%;
+     left:50%;
+     transform: translate(-50%, -50%);
+
+    
+    }
+
+    #heading{
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
+    #Login{
+                display:flex;
+        align-items: center;
+        justify-content: center;
+              color: #2c3d55;
+
+              margin-bottom: 1rem;
+    }
+
+    /* title */
+    .login-box h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #2c3d55;
+      margin-bottom: 1.8rem;
+      letter-spacing: -0.2px;
+    }
+
+    /* form fields */
+    .field {
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #3a4e6b;
+      margin-bottom: 0.3rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      border: 1px solid #cfdde6;
+      background: white;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: 0.15s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #354e78;
+    }
+
+   
+    button {
+      width: 100%;
+      background:  #2c3d55;
+      border: none;
+      padding: 0.7rem;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #233f61;
+    }
+
+    
+    .row-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1rem 0 0.5rem 0;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .checkbox input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .checkbox label {
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #4c607c;
+    }
+
+    .forgot a {
+      font-size: 0.7rem;
+      color: #354e78;
+      text-decoration: none;
+    }
+
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
+    
+    .signup-link {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+      color: #6c7e97;
+    }
+
+    .signup-link a {
+      color: #354e78;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    hr {
+      margin: 1.5rem 0 0.8rem 0;
+      border: none;
+      border-top: 1px solid #e3e8ef;
+    }
+
+    .clinic-footer {
+      font-size: 0.8rem;
+      color: #8d9aaa;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .auth-subtext {
+  color: #6c7e97;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.7rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 0.7rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 1.2rem;
+}
+
+.auth-link a {
+  color: #354e78;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #354e78;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+}
+
+.link-button:hover {
+  color: #233f61;
+}
+
+.link-button:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.field-error {
+  color: #c62828;
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+input.error {
+  border-color: #c62828;
+}
+
+input.error:focus {
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.2);
+}

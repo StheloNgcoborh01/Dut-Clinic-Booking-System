@@ -36,17 +36,27 @@ namespace Backend.Controllers
             {
                 if (await _authService.CheckEmptyField(user.Fname) || await _authService.CheckEmptyField(user.Lname) || await _authService.CheckEmptyField(user.Email) || await _authService.CheckEmptyField(user.Password))
                 {
-                    return Conflict("Check Empty Fields");
+                    return Conflict(new
+                    {
+                        message = "Check Empty Fields"
+                    });
                 }
 
                 if (await _authService.CheckEmailExistsAsync(user.Email))
                 {
-                    return Conflict($"email {user.Email} Already exist");
+                    return Conflict(new
+                    {
+
+                        message = $"email {user.Email} Already exist"
+                    });
                 }
 
                 if (!await _authService.CheckPasswordStrength(user.Password))
                 {
-                    return Conflict("password is too weak . alteast 8 letters with Capical letter");
+                    return Conflict(new
+                    {
+                        message = "password is too weak . alteast 8 letters with Capical letter"
+                    });
                 }
 
                 var hashedPassword = await _authService.HashPassword(user.Password);
@@ -62,7 +72,11 @@ namespace Backend.Controllers
 
                 await _EmailService.SendVerificationEmail(user.Email, code);
 
-                return Ok($"{user.Email}...Registered");
+                return Ok(new
+                {
+                    message = $"{user.Email}...Registered"
+                }
+                    );
 
             }
             catch (Exception ex)
@@ -102,7 +116,10 @@ namespace Backend.Controllers
 
                 if (UserObject.IsVerified)
                 {
-                    return Conflict("User is already verified");
+                    return Conflict(new
+                    {
+                        message = "User is already verified"
+                    });
                 }
                 var timeNow = DateTime.UtcNow;
 
@@ -124,7 +141,16 @@ namespace Backend.Controllers
 
                 _context.Users.Update(UserObject);
                 await _context.SaveChangesAsync();
-                return Ok("sucess...");
+
+                var token = _tokenService.CreateToken(UserObject);
+                return Ok(new
+                {
+                    message = "You have Registered",
+                    token = token,
+                    expiresInMinutes = 60,
+
+                });
+
             }
             catch (Exception ex)
             {
@@ -155,10 +181,16 @@ namespace Backend.Controllers
                     await _context.SaveChangesAsync();
                     await _EmailService.SendVerificationEmail(UserObject.Email, code);
 
-                    return Ok("Code has Been sent to your Email");
+                    return Ok(new
+                    {
+                        message = "if email exist, Code has Been sent to your Email"
+                    });
 
                 }
-                return Ok("If the email exists, a reset code has been sent.");
+                return Ok(new
+                {
+                    message = "if email exist, Code has Been sent to your Email."
+                });
 
             }
             catch (Exception ex)
@@ -167,6 +199,66 @@ namespace Backend.Controllers
             }
 
         }
+
+
+
+        [HttpPatch("ResendEmail")]
+
+       public async Task<IActionResult> ResendEmail([FromBody] ForgotRequest request)
+        {
+
+            try
+            {
+                var UserObject = await _context.Users
+                                 .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+                if (UserObject != null)
+                {
+                    if (UserObject.VerifyCode != null)
+                    {
+                        string code = await _authService.GenerateRandom();
+                        UserObject.VerifyCode = code;
+                        UserObject.CodeExpiry = DateTime.UtcNow.AddMinutes(10);
+
+                        await _context.SaveChangesAsync();
+                        await _EmailService.SendVerificationEmail(UserObject.Email, code);
+                    }
+
+
+                    else
+                    {
+                        return BadRequest(new
+                        {
+                            message = "Redirect to the forgot page and try again"
+                        });
+                    }
+
+                }
+
+                else
+                {
+                    return Ok(new
+                    {
+                        message = "if email exist, Code has Been sent to your Email."
+                    });
+
+                }
+
+                return Ok(new
+                {
+                    message = "if email exist, Code has Been sent to your Email."
+                });
+            }
+
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+
 
         [HttpPost("verifyForgot")]
         public async Task<IActionResult> VerifyForgot([FromBody] VerifyRequest verifyRequest)
@@ -264,16 +356,23 @@ namespace Backend.Controllers
 
                     if (!await _authService.CheckPasswordStrength(userPassword))
                     {
-                        return Conflict("password is too weak . alteast 8 letters with Capical letter");
+                        return Conflict(new
+                        {
+                            message = "password is too weak . alteast 8 letters with Capical letter"
+                        });
                     }
 
                     var hashedPassword = await _authService.HashPassword(userPassword);
                     UserObject.Password = hashedPassword;
                     UserObject.ResetToken = null;
                     UserObject.ResetTokenExpiry = null;
-                     await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
-                    return Ok("Your have successfull reseted your passsword");
+                    return Ok(new
+                    {
+                        message = "Your have successfull reseted your passsword"
+                    }
+                    );
 
                 }
 
@@ -309,25 +408,25 @@ namespace Backend.Controllers
 
                 if (UserObject == null || UserObject.IsVerified != true || !BCrypt.Net.BCrypt.Verify(login.Password, UserObject.Password))
                 {
-                     return Unauthorized(new { message = "Invalid email or password, or account not verified" });
+                    return Unauthorized(new { message = "Invalid email or password, or account not verified" });
                 }
-                   var token = _tokenService.CreateToken(UserObject);
-                    return Ok(new
-                    {
-                        message = "You have logged in",
-                         token = token,
-                         expiresInMinutes = 60, 
-                        
-                    });
-                }
-            
+                var token = _tokenService.CreateToken(UserObject);
+                return Ok(new
+                {
+                    message = "You have logged in",
+                    token = token,
+                    expiresInMinutes = 60,
+
+                });
+            }
+
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     message = ex.Message,
                     innerMessage = ex.InnerException?.Message,
-                   
+
                 });
             }
 
@@ -335,26 +434,26 @@ namespace Backend.Controllers
         }
 
 
-[Authorize]
-[HttpGet("me")]
-public async Task<IActionResult> GetCurrentUser()
-{
-    // Get user ID from the token
-    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) ;
-    
-    var user = await _context.Users.FindAsync(userId);
-    
-    if (user == null)
-        return NotFound();
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            // Get user ID from the token
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-    return Ok(new
-    {
-        id = user.Id,
-        email = user.Email,
-        name = $"{user.Fname} {user.Lname}",
-        isVerified = user.IsVerified
-    });
-}
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                id = user.Id,
+                email = user.Email,
+                name = $"{user.Fname} {user.Lname}",
+                isVerified = user.IsVerified
+            });
+        }
 
 
 
