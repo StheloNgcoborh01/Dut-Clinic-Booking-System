@@ -7,6 +7,10 @@ import ForgotPassword from './components/ForgotPassword';
 import VerifyForgot from './components/VerifyForgot';
 import PasswordReset from './components/PasswordReset';
 import ProtectedRoute from './services/ProtectedRoute';
+import NavBar from './components/NavBar';
+import Home from './pages/Home';
+import './styles/Navbar.css';
+import AddBooking from './pages/AddBooking.jsx';
 
 
 function App() {
@@ -14,13 +18,19 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
+
+
+
           <Route path="/login" element={ <LoginForm /> } />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/verify" element={<VerifyForm />} />
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/verifyForgot" element={<VerifyForgot />} />
           <Route path ="passwordReset" element = { <PasswordReset /> } /> 
-          <Route path="/" element={<Navigate to = "/login" />} />
+          <Route path ="home" element = {  <Home /> } />
+          <Route path = "/" element = { <Home /> } />
+
+          <Route path ="AddBooking" element = { <AddBooking /> } /> 
         </Routes>
       </div>
     </BrowserRouter>

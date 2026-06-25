@@ -71,7 +71,7 @@ function VerifyForgot() {
     }
   };
 
-    const HandleReset = async (e) => {
+    const HandleResend = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
@@ -135,7 +135,7 @@ function VerifyForgot() {
 
 
             <div className="signup-link">
-          Didn't receive code? <a onClick={HandleReset}>Resend</a>
+          Didn't receive code? <a onClick={HandleResend}>Resend</a>
         </div>
       </form>
     </div>

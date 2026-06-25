@@ -1,0 +1,75 @@
+/* Overlay — full screen */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(68, 70, 70, 0.26); /* semi-transparent */
+  z-index: 99999;
+  display: flex;
+  justify-content: flex-end; /* panel slides in from right */
+  align-items: flex-start;
+  padding-top: 60px; /* below header */
+}
+
+/* Panel sliding from left */
+.PanelMobile {
+  background: white;
+  width: 60%;
+  height: 100%;
+  padding: 2rem 1.5rem;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease;
+}
+
+
+.panel-close {
+  align-self: flex-end;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  margin-bottom: 2rem;
+
+  height: 50px;
+  width: 100%;
+}
+
+.PanelMobile ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.PanelMobile ul li a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: #1e2a41;
+  font-weight: 500;
+  display: block;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eaeef2;
+}
+
+.PanelMobile ul li a:hover {
+  color: #354e78;
+}
+
+/* Slide-in from left animation */
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

@@ -68,8 +68,11 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
        var CheckBookings = await _context.Bookings
                            .Where(b => b.UserId == userId && b.Status == "Upcoming")
                            .ToListAsync();
+      
        var finduser = await _context.Bookings
                       .FirstOrDefaultAsync(u => u.UserId == userId);
+
+                
 
                            
           if(CheckBookings.Count >= 2 )
@@ -90,14 +93,23 @@ public async Task<IActionResult> AddingBooking([FromBody] Booking request)
         {
             return BadRequest(new { message = "ID Number must be 13 digits" });
         }
-        
-        if(finduser.IdNumber != request.IdNumber)
+
+         if (finduser != null)
+                {
+
+                if(finduser.IdNumber != request.IdNumber)
          {
                     return Conflict(new
                     {
                         message = "id number is not valid. use the one u used the first time"
                     });
            }
+                    
+                }
+        
+
+
+           
            
 
         if (appointmentDateUtc == default(DateTime))
@@ -201,6 +213,9 @@ var existingBooking = await _context.Bookings
         {
             message = "An error occurred while creating your booking",
             error = ex.Message,
+            stacktrace = ex.StackTrace,
+            
+
             innerError = ex.InnerException?.Message
         });
     }

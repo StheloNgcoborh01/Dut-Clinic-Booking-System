@@ -57,7 +57,7 @@ namespace Backend.Controllers
          var userEmail = User.FindFirst(ClaimTypes.Email).Value;
          var fullName = User.FindFirst("FullName").Value;
 
-             //check empty fields...
+            
 
 
               var FullMessageinfo = new Contact{

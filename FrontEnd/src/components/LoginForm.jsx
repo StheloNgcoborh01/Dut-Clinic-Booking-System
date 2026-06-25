@@ -14,7 +14,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (isLoggedIn()) {
-        navigate('/dashboard');
+        navigate('/');
     }
 }, [navigate]);
 

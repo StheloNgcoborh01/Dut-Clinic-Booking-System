@@ -1,0 +1,185 @@
+/* Page container with blurred background */
+.booking-page {
+  min-height: 100vh;
+  background: url('/clinic-bg.jpg') no-repeat center/cover;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Centers the form */
+.booking-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Glassmorphism form */
+.booking-form {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.booking-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  margin-bottom: 0.3rem;
+  display : flex;
+  justify-content: center;
+  align-items: center;
+
+  width : 100%;
+}
+
+.booking-sub {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+
+
+    display : flex;
+  justify-content: center;
+  align-items: center;
+
+  width : 100%;
+}
+
+/* Form fields */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  margin-bottom: 0.3rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  color: #1e2a41;
+   box-shadow: 0 0 0 3px rgba(53, 78, 120, 0.4);
+
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(53, 78, 120, 0.89);
+  background: white;
+}
+
+.btn-time{
+   height: 25px;
+
+   display:flex;
+   align-items: center;
+   justify-content: center;
+   width : 100%;
+
+
+}
+
+.btn-all-times{
+   
+  display: inline-flex;
+  align-items: center;
+   flex-wrap:wrap;
+
+   justify-content: center;
+
+
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background: rgba(79, 92, 146, 0.555);
+  color: white;
+  backdrop-filter: blur(4px);
+  text-decoration: none;
+
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+Link {
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+background: #233f61;
+}
+
+.btn-submit {
+  background: #354e78;
+  color: white;
+}
+
+.btn-submit:hover {
+  background: #233f61;
+  transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .booking-form {
+    padding: 1.5rem;
+  }
+
+  .booking-title {
+    font-size: 1.4rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    padding: 0.7rem;
+  }
+}

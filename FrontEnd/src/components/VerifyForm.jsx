@@ -64,7 +64,7 @@ function VerifyForm() {
     }
   };
 
-  const HandleReset = async (e) => {
+  const HandleResend = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
@@ -131,7 +131,7 @@ function VerifyForm() {
         </Button>
 
         <div className="signup-link">
-          Didn't receive code? <a onClick={HandleReset}>Resend</a>
+          Didn't receive code? <a onClick={HandleResend}>Resend</a>
         </div>
 
         <hr />

@@ -1,0 +1,108 @@
+.logo {
+  font-size: 1.5rem;
+   color: #354e78;
+font-family: 'Poppins', sans-serif;  margin-left: 5%;
+
+  max-width: 200px;
+}
+
+.Navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  height: 140px;
+  font-size: 0.9rem;
+
+  font-weight: 550;
+   font-family: 'Inter', sans-serif;
+  
+  
+}
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+  font-family: "Luxurious Roman", serif;
+}
+#history-button{
+
+  font-size: 100%;
+  margin: 15px;
+  text-decoration: none;
+  width: 80px;
+
+  background-color: white;
+}
+
+.navSelection {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-right: 60px;
+  justify-content: space-evenly;
+  font-family: "Abril Fatface", serif;
+}
+
+.navSelection li {
+  margin-left: 20px;
+  font-size: 150%;
+  margin: 5px;
+  font-family: 'Inter', sans-serif;
+
+}
+
+.navSelection li a {
+  color: black;
+  margin: 15px;
+  text-decoration: none;
+
+  
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.navSelection li a:focus {
+ color: #354e78;
+}
+
+.navSelection li a:hover {
+ color: #354e78;
+}
+
+@media (max-width: 500px) {
+.logo {
+  font-size: 1.1rem;
+   color: #354e78;
+  font-family: "Luxurious Roman", serif;
+  margin-left: 5%;
+
+  max-width: 200px;
+}
+
+
+.Navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  height: 100px;
+  font-size: 0.9rem;
+
+  font-weight: 550;
+  font-family:Arial, Helvetica, sans-serif;
+  
+  
+}
+
+  
+}
