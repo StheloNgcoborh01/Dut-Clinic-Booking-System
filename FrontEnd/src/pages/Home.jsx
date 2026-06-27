@@ -25,17 +25,17 @@ function Home() {
     <div className="home-page">
       <Navbar
        togglePanel = {() => setShowPanel((prev) => !prev)} 
-      isMobile={isMobile} 
+        isMobile={isMobile} 
        />
 
              {showPanel && isMobile && <Panel closePanel={() => setShowPanel(false)} />}
       
-      <div className="hero-section">
+        <div className="hero-section">
         <div className="hero-content">
           <h1>Your health is our priority</h1>
           <p>Book appointments, manage your health, and stay connected with Ntuzuma Clinic.</p>
    
-     <Link to="/AddBooking" className="hero-btn">📅 Book Appointment</Link>        </div>
+     <Link to="/AddBooking" className="hero-btn"> Book Appointment</Link>        </div>
       </div>
     </div>
   );

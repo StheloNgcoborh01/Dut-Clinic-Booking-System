@@ -275,7 +275,7 @@ public async Task<IActionResult> GetAPastBookings()
           
            var today = DateTime.UtcNow.Date;
              var bookings = await _context.Bookings
-            .Where(b => b.UserId == userId && b.AppointmentDate < today && b.Status == "Past")
+            .Where(b => b.UserId == userId && b.AppointmentDate < today && b.Status == "Completed" || b.Status == "No-Show"  )
             .OrderByDescending(b => b.AppointmentDate)  // newest first
             .ToListAsync();
 

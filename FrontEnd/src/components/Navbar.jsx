@@ -1,15 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
 import { Button } from '@mui/material';
-import Panel from '../context/Panel.jsx'
-
+import Panel from '../context/Panel.jsx';
+import { useState, useEffect } from 'react';
+import { isLoggedIn, logout } from '../services/AuthServices';
 
 function Navbar({ togglePanel, isMobile }) {
+
+  const loggedIn = isLoggedIn();
+
+  const handleLogout = () => {
+    logout(); 
+  };
+
+
   return (
     <div className="Navbar">
 
 <img
-  src="./public/hospital-logo-design-vector-medical-cross_53876-136743.avif"
+  src="/hospital-logo-design-vector-medical-cross_53876-136743.avif"
   alt="Ntuzuma Clinic logo"
   draggable="false"
   style={{
@@ -37,16 +46,32 @@ function Navbar({ togglePanel, isMobile }) {
         </li>
 
         <li>
+          {
+            loggedIn && (
           <a href="/bookings" draggable="false">
             My Bookings
           </a>
+            )
+          }
+
         
         </li>
 
         <li>
-          <a href="/logout" draggable="false">
-            <img src="./public/icons8-logout-48.png" alt="logout" />
+          {
+           loggedIn && (
+            <a onClick = {handleLogout} draggable="false">
+           Log Out
           </a>
+           )
+          }
+
+          {
+            !loggedIn && (
+              <a href='/login' draggable="false"> Log in </a>
+            )
+          }
+
         </li>
       </ul>
         </>

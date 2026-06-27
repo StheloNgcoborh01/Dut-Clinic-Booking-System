@@ -1,0 +1,278 @@
+/* === Page Layout === */
+.mybookings-page {
+  min-height: 100vh;
+  background: url('/Hero-Section.png') no-repeat center/cover;
+  display: flex;
+  flex-direction: column;
+}
+
+.mybookings-container {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+
+}
+
+.mybookings-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  display:center;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 35%;
+
+}
+
+.mybookings-loading {
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* === Tabs === */
+.filter-tabs {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap;
+
+margin-left: 30%;
+ 
+
+}
+
+.filter-tabs button {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  background: rgba(41, 61, 116, 0.37);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.filter-tabs button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.filter-tabs button.active {
+  background: #354e78;
+  color: white;
+  border-color: #354e78;
+}
+
+/* === Empty State === */
+.mybookings-empty {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mybookings-empty p {
+  color: white;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.empty-btn {
+  background: #354e78;
+  color: white;
+  padding: 0.7rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+  display: inline-block;
+}
+
+.empty-btn:hover {
+  background: #233f61;
+}
+
+/* === Table === */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(50px);
+  
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 420px;
+}
+
+.booking-table thead {
+  background: rgba(53, 78, 120, 0.4);
+  color:rgb(0, 0, 0);
+}
+
+.booking-table th {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.booking-table td {
+  padding: 0.6rem 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+  font-size: 0.85rem;
+}
+
+.booking-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.342);
+}
+
+
+
+/* === Status Badges === */
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-badge.upcoming {
+  background: rgba(74, 222, 128, 0.15);
+  color: #000000;
+}
+
+.status-badge.completed {
+  background: rgba(96, 165, 250, 0.15);
+  color: #000000;
+}
+
+.status-badge.cancelled {
+  background: rgba(248, 113, 113, 0.15);
+  color: #000000;
+}
+
+.status-badge.noshow {
+  background: rgba(251, 191, 36, 0.15);
+  color: #000000;
+}
+
+/* === Reference === */
+.booking-ref {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* === Mobile Responsive === */
+@media (max-width: 768px) {
+  .mybookings-container {
+    padding: 1rem;
+    width:90%;
+  }
+
+  .mybookings-title {
+    font-size: 1.4rem;
+  }
+
+  .booking-table {
+    font-size: 0.75rem;
+    min-width: 360px;
+  }
+
+  .booking-table th,
+  .booking-table td {
+    padding: 0.4rem 0.5rem;
+    font-size : 0.8rem;
+  }
+
+  .booking-table th {
+    font-size: 0.6rem;
+  }
+
+
+  .status-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .filter-tabs button {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .booking-ref{
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mybookings-container {
+    padding: 0.6rem;
+  }
+
+  .booking-table {
+    font-size: 0.65rem;
+    min-width: 280px;
+  }
+
+  .booking-table th,
+  .booking-table td {
+    padding: 0.3rem 0.4rem;
+  }
+
+  .booking-table th {
+    font-size: 0.5rem;
+  }
+
+  .booking-ref {
+    font-size: 0.55rem;
+  }
+
+  .status-badge {
+    font-size: 0.5rem;
+    padding: 0.05rem 0.3rem;
+  }
+
+  .mybookings-title {
+    font-size: 1.2rem;
+  }
+
+  .filter-tabs button {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.7rem;
+  }
+}

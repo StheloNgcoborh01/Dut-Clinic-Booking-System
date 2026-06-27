@@ -11,6 +11,7 @@ import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import './styles/Navbar.css';
 import AddBooking from './pages/AddBooking.jsx';
+import MyBookings from './pages/MyBookings';
 
 
 function App() {
@@ -18,8 +19,6 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-
-
 
           <Route path="/login" element={ <LoginForm /> } />
           <Route path="/register" element={<RegisterForm />} />
@@ -30,7 +29,8 @@ function App() {
           <Route path ="home" element = {  <Home /> } />
           <Route path = "/" element = { <Home /> } />
 
-          <Route path ="AddBooking" element = { <AddBooking /> } /> 
+          <Route path ="AddBooking" element =  {<ProtectedRoute> <AddBooking /> </ProtectedRoute> }    /> 
+          <Route path="/bookings" element=    { <ProtectedRoute>  <MyBookings />   </ProtectedRoute> } />
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,7 +1,7 @@
 /* Page container with blurred background */
 .booking-page {
   min-height: 100vh;
-  background: url('/clinic-bg.jpg') no-repeat center/cover;
+  background: url('/Hero-Section.png') no-repeat center/cover;
   display: flex;
   flex-direction: column;
 }
@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
 }
 
 /* Glassmorphism form */
@@ -26,6 +27,7 @@
   width: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  
 }
 
 .booking-title {
@@ -43,7 +45,7 @@
 .booking-sub {
   color: rgba(0, 0, 0, 0.8);
   font-size: 0.95rem;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1rem;
 
 
     display : flex;
@@ -62,7 +64,7 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 500;
-  color: white;
+  color: rgb(0, 0, 0);
   margin-bottom: 0.3rem;
 }
 
@@ -70,7 +72,7 @@
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.9);
@@ -102,13 +104,11 @@
 }
 
 .btn-all-times{
-   
   display: inline-flex;
   align-items: center;
    flex-wrap:wrap;
 
    justify-content: center;
-
 
 }
 

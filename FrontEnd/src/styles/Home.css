@@ -8,7 +8,7 @@
 
 .hero-section {
   flex: 1;
-  background: url('public/Hero-Section.png') no-repeat center/100% 100% !important;
+  background: url('/Hero-Section.png') no-repeat center/100% 100% !important;
   /* 100% 100% forces the image to stretch both width and height */
   width: 100% !important;
   min-height: calc(100vh - 100px);
@@ -57,7 +57,7 @@
 }
 
 .hero-btn {
- color: #2c3d55;
+
   color: white;
   border: none;
   padding: 0.9rem 2.5rem;
@@ -69,6 +69,8 @@
 
   width: 50%;
   text-decoration: none;
+
+  background-color: #233f61;
 }
 
 .hero-btn:hover {

@@ -59,7 +59,7 @@ function LoginForm() {
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        navigate('/dashboard');
+        navigate('/');
       } else {
         setErrors({ general: data.message || 'Login failed' });
       }

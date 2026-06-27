@@ -21,19 +21,17 @@ export const isStrongPassword = (password) => {
          /[0-9]/.test(password);
 };
 
-// Check if passwords match
+
 export const doPasswordsMatch = (password, confirmPassword) => {
   return password === confirmPassword;
 };
 
-// Sanitize input (trim spaces)
+
 export const sanitizeInput = (value) => {
   return value.trim();
 };
 
-// ============================================
-// 2. FORM-SPECIFIC VALIDATION FUNCTIONS
-// ============================================
+
 
 // Login validation
 export const validateLogin = (data) => {
@@ -53,7 +51,7 @@ export const validateLogin = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-// Registration validation
+
 export const validateRegister = (data) => {
   const errors = {};
 
@@ -81,7 +79,6 @@ export const validateRegister = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-// Forgot Password validation
 export const validateForgotPassword = (data) => {
   const errors = {};
 
@@ -94,7 +91,6 @@ export const validateForgotPassword = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-// Verify Code validation (for both verify-email and verify-forgot)
 export const validateVerifyCode = (data) => {
   const errors = {};
 
@@ -107,7 +103,7 @@ export const validateVerifyCode = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-// Reset Password validation
+
 export const validateResetPassword = (data) => {
   const errors = {};
 

@@ -169,7 +169,7 @@ function AddBooking() {
 
       <div className="booking-container">
         <div className="booking-form glass">
-          <h2 className="booking-title">📅 Book Appointment</h2>
+          <h2 className="booking-title"> Book Appointment</h2>
           <p className="booking-sub">Fill in the details below to schedule your visit.</p>
 
           <form onSubmit={handleSubmit}>
@@ -223,7 +223,7 @@ function AddBooking() {
 
 
 
-            {/* Time */}
+   
    {/* Time slots */}
       <div>
 
@@ -243,7 +243,7 @@ function AddBooking() {
               style={{
                 margin: "5px",
                 backgroundColor:
-                  selectedTime === time ? "green" : "#ddd"
+                selectedTime === time ? "green" : "#ddd"
               }}
             >
               {time}
