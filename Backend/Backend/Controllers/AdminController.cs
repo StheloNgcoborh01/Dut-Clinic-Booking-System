@@ -71,7 +71,7 @@ public async Task<bool> IsAdmin()
                 }
             
        var today = DateTime.UtcNow.Date;
-       var thatday = today.AddDays(3);
+       var thatday = today;
        var bookings = await _context.Bookings
                       .Where(b => b.AppointmentDate == thatday && b.Status == "Upcoming")
                       .OrderBy( b => b.AppointmentTime)
@@ -96,6 +96,27 @@ public async Task<bool> IsAdmin()
 
         }
 
+[Authorize]
+[HttpGet("verifyAdmin")]
+public async Task<IActionResult> VerifyAdmin()
+{
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+    
+    if (userIdClaim == null)
+    {
+        return Unauthorized(new { isAdmin = false });
+    }
+
+    var userId = int.Parse(userIdClaim.Value);
+    var user = await _context.Users.FindAsync(userId);
+
+    if (user == null)
+    {
+        return Unauthorized(new { isAdmin = false });
+    }
+
+    return Ok(new { isAdmin = user.IsAdmin });
+}
 
   //the All Bookings endpoint
 
@@ -437,7 +458,41 @@ public async Task<IActionResult> AllBookingFor(int userid)
    
     }
 
+    [Authorize]
+[HttpGet("unreadMessagesCount")]
+public async Task<IActionResult> UnreadMessagesCount()
+{
+    if (!await IsAdmin())
+    {
+        return Unauthorized(new { message = "Unable to access" });
+    }
 
+    var count = await _context.Contacts
+        .Where(m => m.IsRead == false)
+        .CountAsync();
+
+    return Ok(new
+    {
+        unreadCount = count
+    });
+}
+
+[Authorize]
+[HttpGet("totalBookingsCount")]
+public async Task<IActionResult> TotalBookingsCount()
+{
+    if (!await IsAdmin())
+    {
+        return Unauthorized(new { message = "Unable to access" });
+    }
+
+    var count = await _context.Bookings.CountAsync();
+
+    return Ok(new
+    {
+        totalBookings = count
+    });
+}
 
   public class Reschedule
         {
@@ -634,6 +689,49 @@ public async Task<IActionResult> AdminReschedule([FromBody] Reschedule reschedul
     }
             
         }
+
+
+[Authorize]
+[HttpGet("allUsers")]
+public async Task<IActionResult> AllUsers()
+{
+    try
+    {
+        if (!await IsAdmin())
+        {
+            return Unauthorized(new { message = "Unable to access" });
+        }
+
+        var users = await _context.Users
+            .Select(u => new
+            {
+                u.Id,
+                u.Email,
+                u.Fname,
+                u.Lname,
+                u.IsVerified,
+                u.IsAdmin
+            })
+            .OrderBy(u => u.Fname)
+            .ToListAsync();
+
+        return Ok(new
+        {
+            message = "All users",
+            count = users.Count,
+            users = users
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message
+        });
+    }
+}
+
 
 
 public class Toggleadmin

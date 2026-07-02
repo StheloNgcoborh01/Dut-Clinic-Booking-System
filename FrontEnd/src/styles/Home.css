@@ -9,7 +9,6 @@
 .hero-section {
   flex: 1;
   background: url('/Hero-Section.png') no-repeat center/100% 100% !important;
-  /* 100% 100% forces the image to stretch both width and height */
   width: 100% !important;
   min-height: calc(100vh - 100px);
   position: relative;
@@ -22,7 +21,7 @@
 
     background-size: cover;
   background-position: center;
-  background-attachment: scroll; /* prevents weird fixed behavior */
+  background-attachment: scroll; 
 
  
 
@@ -78,7 +77,6 @@
   transform: scale(1.02);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .hero-content h1 {
     font-size: 2rem;
@@ -95,10 +93,9 @@
   }
 }
 
-/* Fix for mobile — prevent stretching */
 @media (max-width: 768px) {
   .hero-section {
-    min-height: 50vh; /* ← even smaller on mobile */
+    min-height: 50vh; 
     background-position: top center;
     padding: 1.5rem;
   }

@@ -4,14 +4,48 @@ import { Button } from '@mui/material';
 import Panel from '../context/Panel.jsx';
 import { useState, useEffect } from 'react';
 import { isLoggedIn, logout } from '../services/AuthServices';
+import { checkAdminStatus } from '../services/AuthServices'; 
+
 
 function Navbar({ togglePanel, isMobile }) {
 
+
   const loggedIn = isLoggedIn();
+  const token = localStorage.getItem('token');
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminChecked, setAdminChecked] = useState(false);
 
   const handleLogout = () => {
     logout(); 
   };
+
+    useEffect(() => {
+    const checkAdmin = async () => {
+      if (!token) {
+        setAdminChecked(true);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/Admin/verifyAdmin', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsAdmin(data.isAdmin === true);
+        }
+      } catch (error) {
+        console.error('Admin check failed:', error);
+      } finally {
+        setAdminChecked(true);
+      }
+    };
+
+    checkAdmin();
+  }, [token]);
+
 
 
   return (
@@ -56,6 +90,11 @@ function Navbar({ togglePanel, isMobile }) {
 
         
         </li>
+
+     
+          {adminChecked && isAdmin && (
+            <li><Link to="/admin/dashboard">Admin</Link></li>
+          )}
 
         <li>
           {

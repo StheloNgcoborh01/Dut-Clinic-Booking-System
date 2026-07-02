@@ -1,13 +1,47 @@
-import React from 'react';
+import{ React, useEffect ,  useState} from 'react';
 import '../styles/panel.css';
 import { isLoggedIn, logout } from '../services/AuthServices';
+import { Link } from 'react-router-dom';
 
 const Panel = ({ closePanel }) => {
+
+  
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [adminChecked, setAdminChecked] = useState(false);
+    const token = localStorage.getItem('token');
+
+
     const loggedIn = isLoggedIn();
 
   const handleLogout = () => {
     logout(); 
   };
+
+      useEffect(() => {
+      const checkAdmin = async () => {
+        if (!token) {
+          setAdminChecked(true);
+          return;
+        }
+  
+        try {
+          const response = await fetch('http://localhost:3000/api/Admin/verifyAdmin', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+  
+          if (response.ok) {
+            const data = await response.json();
+            setIsAdmin(data.isAdmin === true);
+          }
+        } catch (error) {
+          console.error('Admin check failed:', error);
+        } finally {
+          setAdminChecked(true);
+        }
+      };
+  
+      checkAdmin();
+    }, [token]);
 
 
   return (
@@ -29,6 +63,11 @@ const Panel = ({ closePanel }) => {
 
             )
           }
+
+
+          {adminChecked && isAdmin && (
+            <li><Link to="/admin/dashboard">Admin</Link></li>
+          )}
 
           {
             loggedIn && (

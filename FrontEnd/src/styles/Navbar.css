@@ -7,6 +7,15 @@ font-family: 'Poppins', sans-serif;  margin-left: 5%;
 }
 
 .Navbar {
+  background: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+.Navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -15,9 +24,7 @@ font-family: 'Poppins', sans-serif;  margin-left: 5%;
   font-size: 0.9rem;
 
   font-weight: 550;
-   font-family: 'Inter', sans-serif;
-  
-  
+   font-family: 'Inter', sans-serif;  
 }
 .logo-wrapper {
   display: flex;
@@ -58,6 +65,41 @@ font-family: 'Poppins', sans-serif;  margin-left: 5%;
   font-family: 'Inter', sans-serif;
 
 }
+/* Nav links — setup */
+.navSelection li {
+  position: relative;
+  list-style: none;
+}
+
+.navSelection li a {
+  color: white;
+  text-decoration: none;
+
+  padding: 0.5rem 0.2rem;
+  display: inline-block;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navSelection li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2.5px;
+  background: #354e78; 
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.navSelection li a:hover::after {
+  width: 100%;
+}
+
+.navSelection li a:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
 
 .navSelection li a {
   color: black;
@@ -76,7 +118,7 @@ font-family: 'Poppins', sans-serif;  margin-left: 5%;
 }
 
 .navSelection li a:hover {
- color: #354e78;
+ color: #261e58;
 }
 
 @media (max-width: 500px) {

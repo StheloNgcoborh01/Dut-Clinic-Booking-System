@@ -7,16 +7,16 @@ import { Link } from 'react-router-dom';
 
 function Home() {
 
-  const [showPanel, setShowPanel] = useState(false); // les state is boolean if a use pres the show history it true ..then history panel is shown
+  const [showPanel, setShowPanel] = useState(false); 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // le state si check screen size then return true or false bas eon it..
 
    // Listen for window resize to toggle mobile state
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // if the arguemnt is true..then the ismobile is true..
-      if (window.innerWidth > 768) setShowPanel(false); // hide mobile panel on desktop iif it false the the value is false
+      setIsMobile(window.innerWidth <= 768); 
+      if (window.innerWidth > 768) setShowPanel(false); 
     };
-    window.addEventListener("resize", handleResize); // this listens to the resize then pas the value of true or false
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

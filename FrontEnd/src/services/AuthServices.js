@@ -37,5 +37,22 @@ export const logout = () => {
 };
 
 
+export const checkAdminStatus = async (token) => {
+  try {
+    const response = await fetch('http://localhost:3000/api/Admin/verifyAdmin', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.isAdmin === true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Admin check failed:', error);
+    return false;
+  }
+};
+
 
 

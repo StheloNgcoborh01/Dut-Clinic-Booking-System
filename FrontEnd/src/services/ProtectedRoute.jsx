@@ -10,10 +10,8 @@ const loggedIn = isLoggedIn();
 if (!loggedIn) {
 
    return <Navigate to ="/login" replace />;
-
    
 }
-
   return children;
 
 }

@@ -58,82 +58,100 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
 {
    options.GeneralRules = new List<RateLimitRule>
     {
-            new RateLimitRule
+        new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Register",
             Period = "1h",
             Limit = 3
         },
-
-           new RateLimitRule
+        new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Verify",
             Period = "1h",
             Limit = 3
         },
-
-        
-           new RateLimitRule
+        new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Forgot",
             Period = "1h",
             Limit = 2
         },
-
-          new RateLimitRule
+        new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/verifyForgot",
             Period = "1h",
             Limit = 5
         },
-        
         new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/login",
             Period = "1m",
             Limit = 3
         },
-       
         new RateLimitRule
         {
             Endpoint = "POST:/api/Auth/Forgot",
             Period = "30m",
             Limit = 3
         },
-        
-       
         new RateLimitRule
         {
             Endpoint = "POST:/api/Bookings",
             Period = "1m",
             Limit = 10
         },
-        
         new RateLimitRule
         {
             Endpoint = "GET:/api/Bookings/available-dates",
             Period = "1m",
-            Limit = 30
+            Limit = 20
         },
-        
-        
         new RateLimitRule
         {
             Endpoint = "POST:/api/Contact/SendMessage",
             Period = "1h",
             Limit = 3
         },
-        
        
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Admin/TodaysBookings",
+            Period = "1m",
+            Limit = 30
+        },
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Admin/verifyAdmin",
+            Period = "1m",
+            Limit = 30
+        },
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Admin/totalBookingsCount",
+            Period = "1m",
+            Limit = 30
+        },
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Admin/unreadMessagesCount",
+            Period = "1m",
+            Limit = 30
+        },
+        new RateLimitRule
+        {
+            Endpoint = "GET:/api/Admin/allUsers",
+            Period = "1m",
+            Limit = 30
+        },
+        // Fallback for everything else
         new RateLimitRule
         {
             Endpoint = "*",
             Period = "1m",
-            Limit = 10
+            Limit = 50
         }
     };
 });
-
 
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();

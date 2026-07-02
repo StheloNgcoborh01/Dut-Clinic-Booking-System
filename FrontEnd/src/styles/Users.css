@@ -1,0 +1,359 @@
+.users-page {
+  min-height: 100vh;
+  background-image: linear-gradient(#354e78, #042152, #354e78);
+  display: flex;
+  flex-direction: column;
+}
+
+.users-container {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+}
+
+.user-count {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+}
+
+/* Tabs */
+.filter-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.filter-tabs button {
+  padding: 0.5rem 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.filter-tabs button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.filter-tabs button.active {
+  background: #354e78;
+  color: white;
+  border-color: #354e78;
+}
+
+.loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.empty-state {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.empty-state p {
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(4px);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 600px;
+}
+
+.users-table thead {
+  background: rgba(53, 78, 120, 0.5);
+}
+
+.users-table th {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  color: white;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.users-table td {
+  padding: 0.6rem 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+
+.users-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Verified Badge */
+.verified-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+}
+
+.verified-badge.verified {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.verified-badge.unverified {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+/* Role Badge */
+.role-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+}
+
+.role-badge.admin {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.role-badge.user {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
+
+/* Toggle Admin Button */
+.toggle-admin-btn {
+  padding: 0.2rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.toggle-admin-btn.add {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.toggle-admin-btn.add:hover {
+  background: rgba(74, 222, 128, 0.25);
+}
+
+.toggle-admin-btn.remove {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.toggle-admin-btn.remove:hover {
+  background: rgba(248, 113, 113, 0.25);
+}
+
+.toggle-admin-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  max-width: 420px;
+  width: 100%;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.3rem 0;
+}
+
+.modal-subtext {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.modal-input-group {
+  margin-bottom: 1.2rem;
+}
+
+.modal-input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.3rem;
+}
+
+.modal-input-group input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.modal-input-group input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(53, 78, 120, 0.4);
+}
+
+.modal-error {
+  color: #f87171;
+  font-size: 0.8rem;
+  margin: -0.5rem 0 1rem 0;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.modal-cancel-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.modal-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-confirm-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 30px;
+  background: #354e78;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.modal-confirm-btn:hover {
+  background: #233f61;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .users-container {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .users-table {
+    font-size: 0.75rem;
+    min-width: 500px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}

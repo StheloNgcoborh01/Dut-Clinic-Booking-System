@@ -34,9 +34,7 @@ function AddBooking() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
-
-
+  
     // Fetch available dates when page loads
   useEffect(() => {
 

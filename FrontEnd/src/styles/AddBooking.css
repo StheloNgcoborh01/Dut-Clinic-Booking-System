@@ -1,4 +1,3 @@
-/* Page container with blurred background */
 .booking-page {
   min-height: 100vh;
   background: url('/Hero-Section.png') no-repeat center/cover;
@@ -16,7 +15,6 @@
 
 }
 
-/* Glassmorphism form */
 .booking-form {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px);
