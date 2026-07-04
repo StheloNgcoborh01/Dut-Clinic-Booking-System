@@ -12,6 +12,10 @@ using System.Net;
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 //services
 
@@ -180,9 +184,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("AllowReactApp");
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
+
 
 //middleswares
 app.UseIpRateLimiting();
