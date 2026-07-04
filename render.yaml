@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: dutclinic-frontend
+    runtime: static
+    repo: https://github.com/StheloNgcoborh01/Dut-Clinic-Booking-System
+    branch: main
+    rootDir: FrontEnd
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
