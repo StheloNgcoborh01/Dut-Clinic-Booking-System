@@ -14,6 +14,9 @@ DotEnv.Load();
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 //services
 
 builder.Services.AddControllers();
@@ -182,8 +185,6 @@ using (var scope = app.Services.CreateScope())
 app.UseCors("AllowReactApp");
 
 
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
 
 //middleswares
 app.UseIpRateLimiting();
