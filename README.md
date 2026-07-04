@@ -49,10 +49,10 @@ JWT Token Expiry (1 hour default, customizable via Remember Me)
 ---
 
 ## How to Run the App
-
+```on Node terminal
 git clone https://github.com/StheloNgcoborh01/Dut-Clinic-Booking-System.git
 cd Dut-Clinic-Booking-System
-
+```
 ---
 
 ## Backend Setup:
