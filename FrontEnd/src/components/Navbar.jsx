@@ -67,23 +67,23 @@ function Navbar({ togglePanel, isMobile }) {
         
       <ul className="navSelection" draggable="false">
         <li>
-          <a href="/" draggable="false">
+          <link to="/" draggable="false">
               Home
-          </a>
+          </link>
         </li>
 
         <li>
-          <a href="/contact" draggable="false">
+          <link to="/contact" draggable="false">
             Contact Us
-          </a>
+          </link>
         </li>
 
         <li>
           {
             loggedIn && (
-          <a href="/bookings" draggable="false">
+          <link to="/bookings" draggable="false">
             My Bookings
-          </a>
+          </link>
             )
           }
 
@@ -106,7 +106,7 @@ function Navbar({ togglePanel, isMobile }) {
 
           {
             !loggedIn && (
-              <a href='/login' draggable="false"> Log in </a>
+              <link to='/login' draggable="false"> Log in </link>
             )
           }
 
