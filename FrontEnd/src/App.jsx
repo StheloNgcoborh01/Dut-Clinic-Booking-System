@@ -7,7 +7,7 @@ import ForgotPassword from './components/ForgotPassword';
 import VerifyForgot from './components/VerifyForgot';
 import PasswordReset from './components/PasswordReset';
 import ProtectedRoute from './services/ProtectedRoute';
-import NavBar from './components/NavBar';
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import './styles/Navbar.css';
 import AddBooking from './pages/AddBooking.jsx';
@@ -18,7 +18,7 @@ import AdminRoute from './services/AdminRoute';
 import TodaysBookings from './pages/admin/TodaysBookings';
 import AllBookings from './pages/admin/AllBookings';
 import Messages from './pages/admin/Messages';
-import Users from './pages/admin/Users';
+import Users from './pages/admin/users';
 
 
 
