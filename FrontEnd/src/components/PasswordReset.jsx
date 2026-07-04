@@ -61,7 +61,7 @@ function ResetPassword() {
 
 
     try {
-      const response = await fetch('http://localhost:3000/api/Auth/reset-password', {
+      const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

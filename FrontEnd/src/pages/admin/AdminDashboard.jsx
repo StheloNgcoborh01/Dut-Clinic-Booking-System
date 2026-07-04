@@ -32,16 +32,16 @@ function AdminDashboard() {
         
         // Fetch all stats in parallel
         const [todayRes, totalRes, unreadRes, usersRes] = await Promise.all([
-          fetch('http://localhost:3000/api/Admin/TodaysBookings', {
+          fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/TodaysBookings', {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
-          fetch('http://localhost:3000/api/Admin/totalBookingsCount', {
+          fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/totalBookingsCount', {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
-          fetch('http://localhost:3000/api/Admin/unreadMessagesCount', {
+          fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/unreadMessagesCount', {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
-          fetch('http://localhost:3000/api/Admin/allUsers', {
+          fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/allUsers', {
             headers: { 'Authorization': `Bearer ${token}` }
           })
         ]);

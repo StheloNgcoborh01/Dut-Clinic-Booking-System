@@ -26,11 +26,11 @@ function MyBookings() {
       let endpoint = '';
 
       if (filter === 'all') {
-        endpoint = 'http://localhost:3000/api/AddBooking/MyBookings';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AddBooking/MyBookings';
       } else if (filter === 'upcoming') {
-        endpoint = 'http://localhost:3000/api/AddBooking/FutureBookings';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AddBooking/FutureBookings';
       } else if (filter === 'past') {
-        endpoint = 'http://localhost:3000/api/AddBooking/MyPastBookings';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AddBooking/MyPastBookings';
       }
 
       const response = await fetch(endpoint, {

@@ -25,7 +25,7 @@ function TodaysBookings() {
   const fetchTodaysBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/Admin/TodaysBookings', {
+      const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/TodaysBookings', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

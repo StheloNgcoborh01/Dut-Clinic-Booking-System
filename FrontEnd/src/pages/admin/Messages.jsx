@@ -26,11 +26,11 @@ function Messages() {
       let endpoint = '';
 
       if (filter === 'all') {
-        endpoint = 'http://localhost:3000/api/AdminContact/allMessages';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AdminContact/allMessages';
       } else if (filter === 'unread') {
-        endpoint = 'http://localhost:3000/api/AdminContact/UnreadMessages';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AdminContact/UnreadMessages';
       } else if (filter === 'read') {
-        endpoint = 'http://localhost:3000/api/AdminContact/ReadMessages';
+        endpoint = 'https://dut-clinic-booking-system-y9d7.onrender.com/api/AdminContact/ReadMessages';
       }
 
       const response = await fetch(endpoint, {
@@ -65,7 +65,7 @@ function Messages() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/AdminContact/MarkMessage/toggleRead/${id}`, {
+      const response = await fetch(`https://dut-clinic-booking-system-y9d7.onrender.com/api/AdminContact/MarkMessage/toggleRead/${id}`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -42,7 +42,7 @@ function Contact() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/Contacts/SendMessage', {
+      const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Contacts/SendMessage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

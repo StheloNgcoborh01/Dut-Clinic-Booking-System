@@ -1,6 +1,6 @@
 import { getToken, logout } from './AuthServices';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://dut-clinic-booking-system-y9d7.onrender.com/api';
 
 export const apiRequest = async (endpoint, options = {}) => {
     const token = getToken();

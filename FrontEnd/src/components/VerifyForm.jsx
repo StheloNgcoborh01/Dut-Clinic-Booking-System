@@ -71,7 +71,7 @@ function VerifyForm() {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/Auth/ResendEmail",
+        "https://dut-clinic-booking-system-y9d7.onrender.com/api/Auth/ResendEmail",
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

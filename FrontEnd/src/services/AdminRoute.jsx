@@ -14,7 +14,7 @@ function AdminRoute({ children }) {
       }
 
       try {
-        const response = await fetch('http://localhost:3000/api/Admin/verifyAdmin', {
+        const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/verifyAdmin', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 

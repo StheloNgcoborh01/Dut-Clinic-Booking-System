@@ -27,7 +27,7 @@ function Users() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/Admin/allUsers', {
+      const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/allUsers', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -66,7 +66,7 @@ function Users() {
     setTogglingId(selectedUserId);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/Admin/toggleadmin/${selectedUserId}`, {
+      const response = await fetch(`https://dut-clinic-booking-system-y9d7.onrender.com/api/Admin/toggleadmin/${selectedUserId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

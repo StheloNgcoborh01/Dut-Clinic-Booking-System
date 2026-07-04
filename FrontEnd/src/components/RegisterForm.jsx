@@ -55,7 +55,7 @@ function RegisterForm({ onRegisterSuccess }) {
     setLoading(true);
 
     try {
-  const response = await fetch('http://localhost:3000/api/Auth/register', {
+  const response = await fetch('https://dut-clinic-booking-system-y9d7.onrender.com/api/Auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

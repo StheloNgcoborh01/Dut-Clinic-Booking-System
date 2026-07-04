@@ -46,7 +46,7 @@ function AddBooking() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:3000/api/Bookings/available-dates",
+          "https://dut-clinic-booking-system-y9d7.onrender.com/api/Bookings/available-dates",
           {
             headers: {
               Authorization: `Bearer ${token}`
