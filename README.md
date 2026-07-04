@@ -4,7 +4,7 @@ A full-stack clinic booking system designed for university health clinics. Patie
 
 ---
 
-🔗 Live Demo: :[Booking App](https://dut-clinic-booking-systemfrontend.onrender.com)
+🔗 Live Demo :[Booking App](https://dut-clinic-booking-systemfrontend.onrender.com)
 
 ---
 
@@ -42,9 +42,9 @@ JWT Token Expiry (1 hour default, customizable via Remember Me)
 
 ## 📸 Screenshots
 
-![home page](Screenshot(447).png)
+![Home Page](Screenshot%20(447).png)
 
-![home page](Screenshot(448).png)
+![login Page](Screenshot%20(448).png)
 
 ---
 
