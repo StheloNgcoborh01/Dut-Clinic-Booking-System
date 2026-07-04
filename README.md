@@ -1,8 +1,10 @@
 # Ntuzuma Clinic Booking System
 
 A full-stack clinic booking system designed for university health clinics. Patients can book appointments, manage their bookings, and communicate with the clinic, while administrators have full control over appointments, users, and messages.
+
 --
-🔗 Live Demo: : [Booking App](https://dut-clinic-booking-system-frontend.onrender.com)
+
+🔗 Live Demo: :[Booking App](https://dut-clinic-booking-systemfrontend.onrender.com)
 
 --
 
@@ -40,9 +42,9 @@ JWT Token Expiry (1 hour default, customizable via Remember Me)
 
 # 📸 Screenshots
 
-![home page](Dut-Clinic-Booking-System/Screenshot(447).png)
+![home page](/Screenshot(447).png)
 
-![home page](Dut-Clinic-Booking-System/Screenshot(448).png)
+![home page](/Screenshot(448).png)
 
 --
 
