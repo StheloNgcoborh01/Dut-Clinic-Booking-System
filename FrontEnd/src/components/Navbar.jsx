@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
-import { Button } from '@mui/material';
 import Panel from '../context/Panel.jsx';
 import { useState, useEffect } from 'react';
 import { isLoggedIn, logout } from '../services/AuthServices';
