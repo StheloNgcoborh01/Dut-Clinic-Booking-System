@@ -2,7 +2,6 @@ import { useState , useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validateLogin, sanitizeInput } from '../services/validationService';
 import { isLoggedIn } from '../services/AuthServices';
-import { Password } from '@mui/icons-material';
 
 function LoginForm() {
   const navigate = useNavigate();
